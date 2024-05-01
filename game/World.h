@@ -1,7 +1,8 @@
 #include <Body.h>
 
-extern Body* bodies;
+extern gpBody* gpBodies;
 extern int bodyCount;
 
-Body* CreateBody();
-void DestroyBody(Body* body);
+gpBody* CreateBody();
+void DestroyBody(gpBody* body);
+void DestroyAllBodies();

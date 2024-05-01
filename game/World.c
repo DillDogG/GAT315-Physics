@@ -1,27 +1,31 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include <World.h>
 
-Body* bodies = NULL;
+gpBody* gpBodies = NULL;
 int bodyCount = 0;
 
-Body* CreateBody()
+gpBody* CreateBody()
 {
-	Body* newBody;
-	newBody = malloc(sizeof(Body));
+	gpBody* newBody;
+	newBody = malloc(sizeof(gpBody));
 	assert(newBody);
+
+	memset(newBody, 0, sizeof(gpBody));
+
 	newBody->prev = NULL;
-	newBody->next = bodies;
+	newBody->next = gpBodies;
 	if (bodyCount > 0)
 	{
-		bodies->prev = newBody;
+		gpBodies->prev = newBody;
 	}
-	bodies = newBody;
+	gpBodies = newBody;
 	bodyCount++;
 	return newBody;
 }
 
-void DestroyBody(Body* body)
+void DestroyBody(gpBody* body)
 {
 	assert(body);
 	if (body->next != NULL)
@@ -32,9 +36,14 @@ void DestroyBody(Body* body)
 	{
 		body->prev->next = body->next;
 	}
-	if (body == bodies) {
-		bodies = body->next;
+	if (body == gpBodies) {
+		gpBodies = body->next;
 	}
 	bodyCount--;
 	free(body);
+}
+
+void DestroyAllBodies()
+{
+
 }
