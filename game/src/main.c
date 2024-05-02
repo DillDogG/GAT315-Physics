@@ -11,9 +11,12 @@
 
 int main(void)
 {
+	InitWindow(800, 450, "raylib [core] example - basic window");
 	SetTargetFPS(60);
 
-	InitWindow(800, 450, "raylib [core] example - basic window");
+	// initialize world
+	gpGravity = (Vector2){ 0, 30 };
+
 	while (!WindowShouldClose())
 	{
 		float dt = GetFrameTime();
@@ -25,21 +28,25 @@ int main(void)
 			gpBody* body = CreateBody();
 			body->position = position;
 			body->mass = GetRandomFloatValue(1, 10);
+			body->inverseMass = 1 / body->mass;
+			body->type = BT_DYNAMIC;
+			body->damping = 0.5f;
+			body->gravityScale = 20;
+			ApplyForce(body, (Vector2){ GetRandomFloatValue(-100, 100), GetRandomFloatValue(-100, 100) }, FM_VELOCITY);
 		}
 
 		// apply force
 		gpBody* body = gpBodies;
 		while (body)
 		{
-			ApplyForce(body, CreateVector2(0, -50));
+			//ApplyForce(body, CreateVector2(0, -50), FM_FORCE);
 			body = body->next;
 		}
 
 		body = gpBodies;
 		while (body)
 		{
-			ExplicitEuler(body, dt);
-			ClearForce(body);
+			Step(body, dt);
 			body = body->next;
 		}
 

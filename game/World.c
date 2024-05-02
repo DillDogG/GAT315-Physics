@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-#include <World.h>
+#include "World.h"
+#include "Body.h"
 
 gpBody* gpBodies = NULL;
 int bodyCount = 0;
+Vector2 gpGravity;
 
 gpBody* CreateBody()
 {
