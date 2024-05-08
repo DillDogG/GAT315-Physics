@@ -2,12 +2,12 @@
 //#include <Body.h>
 #include "raylib.h"
 
-typedef struct gpBody gpBody;
+typedef struct ncBody ncBody;
 
-extern gpBody* gpBodies;
+extern ncBody* ncBodies;
 extern int bodyCount;
-extern Vector2 gpGravity;
+extern Vector2 ncGravity;
 
-gpBody* CreateBody();
-void DestroyBody(gpBody* body);
+ncBody* CreateBody();
+void DestroyBody(ncBody* body);
 void DestroyAllBodies();

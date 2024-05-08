@@ -4,30 +4,30 @@
 #include "World.h"
 #include "Body.h"
 
-gpBody* gpBodies = NULL;
+ncBody* ncBodies = NULL;
 int bodyCount = 0;
-Vector2 gpGravity;
+Vector2 ncGravity;
 
-gpBody* CreateBody()
+ncBody* CreateBody()
 {
-	gpBody* newBody;
-	newBody = malloc(sizeof(gpBody));
+	ncBody* newBody;
+	newBody = malloc(sizeof(ncBody));
 	assert(newBody);
 
-	memset(newBody, 0, sizeof(gpBody));
+	memset(newBody, 0, sizeof(ncBody));
 
 	newBody->prev = NULL;
-	newBody->next = gpBodies;
+	newBody->next = ncBodies;
 	if (bodyCount > 0)
 	{
-		gpBodies->prev = newBody;
+		ncBodies->prev = newBody;
 	}
-	gpBodies = newBody;
+	ncBodies = newBody;
 	bodyCount++;
 	return newBody;
 }
 
-void DestroyBody(gpBody* body)
+void DestroyBody(ncBody* body)
 {
 	assert(body);
 	if (body->next != NULL)
@@ -38,8 +38,8 @@ void DestroyBody(gpBody* body)
 	{
 		body->prev->next = body->next;
 	}
-	if (body == gpBodies) {
-		gpBodies = body->next;
+	if (body == ncBodies) {
+		ncBodies = body->next;
 	}
 	bodyCount--;
 	free(body);

@@ -1,6 +1,9 @@
 #include "World.h"
 #include "mathf.h"
 #include "Integrator.h"
+#include "Force.h"
+#include "render.h"
+#include "editor.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -11,39 +14,51 @@
 
 int main(void)
 {
-	InitWindow(800, 450, "raylib [core] example - basic window");
+	InitWindow(1260, 680, "raylib [core] example - basic window");
 	SetTargetFPS(60);
 
 	// initialize world
-	gpGravity = (Vector2){ 0, 30 };
+	//ncGravity = (Vector2){ 0, 0 };
 
 	while (!WindowShouldClose())
 	{
 		float dt = GetFrameTime();
 		float fps = (float)GetFPS();
 		Vector2 position = GetMousePosition();
+		ncScreenZoom += GetMouseWheelMove() * 0.2f;
+		ncScreenZoom = Clamp(ncScreenZoom, 0.1f, 10);
+
+		UpdateEditor(position);
 
 		if (IsMouseButtonDown(0))
 		{
-			gpBody* body = CreateBody();
-			body->position = position;
-			body->mass = GetRandomFloatValue(1, 10);
-			body->inverseMass = 1 / body->mass;
-			body->type = BT_DYNAMIC;
-			body->damping = 0.5f;
-			body->gravityScale = 20;
-			ApplyForce(body, (Vector2){ GetRandomFloatValue(-100, 100), GetRandomFloatValue(-100, 100) }, FM_VELOCITY);
+			float angle = GetRandomFloatValue(0, 360);
+			for (int i = 0; i < 1; i++)
+			{
+				ncBody* body = CreateBody();
+				body->position = ConvertScreenToWorld(position);
+				body->mass = GetRandomFloatValue(0.1f, 1);
+				body->inverseMass = 1 / body->mass;
+				body->type = BT_DYNAMIC;
+				body->damping = 0;//2.5f;
+				body->gravityScale = 20;
+				//Vector2 force = Vector2Scale(GetVector2FromAngle(angle), GetVector2FromAngle(angle));
+				//ApplyForce(body, force, FM_IMPULSE);
+			}
 		}
 
+
 		// apply force
-		gpBody* body = gpBodies;
+
+		ApplyGravitation(ncBodies, ncEditorData.GravitationValue);
+		ncBody* body = ncBodies;
 		while (body)
 		{
 			//ApplyForce(body, CreateVector2(0, -50), FM_FORCE);
 			body = body->next;
 		}
 
-		body = gpBodies;
+		body = ncBodies;
 		while (body)
 		{
 			Step(body, dt);
@@ -52,14 +67,17 @@ int main(void)
 
 		BeginDrawing();
 		ClearBackground(BLACK);
+
 		DrawText(TextFormat("FPS: %.2f", fps), 10, 10, 20, LIME);
 		DrawText(TextFormat("DT: %.4f", dt), 10, 30, 20, LIME);
-		body = gpBodies;
+		body = ncBodies;
 		while (body)	
 		{
-			DrawCircle((int)body->position.x, (int)body->position.y, body->mass, RED);
+			Vector2 screen = ConvertWorldToScreen(body->position);
+			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(body->mass), RED);
 			body = body->next;
 		}
+		DrawEditor();
 		EndDrawing();
 	}
 	CloseWindow();

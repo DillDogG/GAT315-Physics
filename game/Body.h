@@ -16,7 +16,7 @@ typedef enum
 	FM_VELOCITY
 } gpForceMode;
 
-typedef struct gpBody
+typedef struct ncBody
 {
 	gpBodyType type;
 	// force -> velocity -> position
@@ -30,11 +30,11 @@ typedef struct gpBody
 	float gravityScale;
 	float damping;
 
-	struct gpBody* next;
-	struct gpBody* prev;
-} gpBody;
+	struct ncBody* next;
+	struct ncBody* prev;
+} ncBody;
 
-inline void ApplyForce(gpBody* body, Vector2 force, gpForceMode forceMode)
+inline void ApplyForce(ncBody* body, Vector2 force, gpForceMode forceMode)
 {
 	if (body->type != BT_DYNAMIC) return;
 
@@ -53,9 +53,9 @@ inline void ApplyForce(gpBody* body, Vector2 force, gpForceMode forceMode)
 	}
 }
 
-inline void ClearForce(gpBody* body)
+inline void ClearForce(ncBody* body)
 {
 	body->force = Vector2Zero();
 }
 
-void Step(gpBody* body, float timestep);
+void Step(ncBody* body, float timestep);
