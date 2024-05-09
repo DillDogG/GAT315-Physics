@@ -4,10 +4,10 @@
 
 typedef enum 
 {
-	BT_STATIC,
+	BT_DYNAMIC,
 	BT_KINEMATIC,
-	BT_DYNAMIC
-} gpBodyType;
+	BT_STATIC
+} ncBodyType;
 
 typedef enum
 {
@@ -18,7 +18,7 @@ typedef enum
 
 typedef struct ncBody
 {
-	gpBodyType type;
+	ncBodyType type;
 	// force -> velocity -> position
 	Vector2 position;
 	Vector2 velocity;

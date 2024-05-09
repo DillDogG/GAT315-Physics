@@ -18,7 +18,7 @@ int main(void)
 	SetTargetFPS(60);
 
 	// initialize world
-	//ncGravity = (Vector2){ 0, 0 };
+	ncGravity = (Vector2){ 0, 0 };
 
 	while (!WindowShouldClose())
 	{
@@ -35,15 +35,17 @@ int main(void)
 			float angle = GetRandomFloatValue(0, 360);
 			for (int i = 0; i < 1; i++)
 			{
-				ncBody* body = CreateBody();
-				body->position = ConvertScreenToWorld(position);
-				body->mass = GetRandomFloatValue(0.1f, 1);
-				body->inverseMass = 1 / body->mass;
-				body->type = BT_DYNAMIC;
-				body->damping = 0;//2.5f;
-				body->gravityScale = 20;
+				ncBody* body = CreateBody(ConvertScreenToWorld(position), ncEditorData.MassMinValue, ncEditorData.BodyTypeActive);
+				//body->position = ConvertScreenToWorld(position);
+				//body->mass = ncEditorData.MassMinValue;
+				//body->inverseMass = 1 / body->mass;
+				//body->type = BT_DYNAMIC;
+				//body->type = ncEditorData.BodyTypeActive;
+				//body->damping = 0;//2.5f;
+				//body->gravityScale = 20;
 				//Vector2 force = Vector2Scale(GetVector2FromAngle(angle), GetVector2FromAngle(angle));
 				//ApplyForce(body, force, FM_IMPULSE);
+				AddBody(body);
 			}
 		}
 
@@ -77,7 +79,7 @@ int main(void)
 			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(body->mass), RED);
 			body = body->next;
 		}
-		DrawEditor();
+		DrawEditor(position);
 		EndDrawing();
 	}
 	CloseWindow();
