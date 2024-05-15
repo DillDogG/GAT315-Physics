@@ -27,6 +27,10 @@
     <ClCompile Include="render.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="contact.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="World.h">
@@ -48,6 +52,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="contact.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

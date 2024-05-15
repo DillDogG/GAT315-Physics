@@ -4,6 +4,8 @@
 #include "Force.h"
 #include "render.h"
 #include "editor.h"
+#include "collision.h"
+#include "contact.h"
 
 #include "raylib.h"
 #include "raymath.h"
@@ -35,14 +37,14 @@ int main(void)
 			float angle = GetRandomFloatValue(0, 360);
 			for (int i = 0; i < 1; i++)
 			{
-				ncBody* body = CreateBody(ConvertScreenToWorld(position), ncEditorData.MassMinValue, ncEditorData.BodyTypeActive);
+				ncBody* body = CreateBody(ConvertScreenToWorld(position), ncEditorData.MassValue, ncEditorData.BodyTypeActive);
 				//body->position = ConvertScreenToWorld(position);
 				//body->mass = ncEditorData.MassMinValue;
 				//body->inverseMass = 1 / body->mass;
 				//body->type = BT_DYNAMIC;
 				//body->type = ncEditorData.BodyTypeActive;
-				//body->damping = 0;//2.5f;
-				//body->gravityScale = 20;
+				body->damping = ncEditorData.DampingValue;
+				body->gravityScale = ncEditorData.GravityScaleValue;
 				//Vector2 force = Vector2Scale(GetVector2FromAngle(angle), GetVector2FromAngle(angle));
 				//ApplyForce(body, force, FM_IMPULSE);
 				AddBody(body);
@@ -53,15 +55,19 @@ int main(void)
 		// apply force
 
 		ApplyGravitation(ncBodies, ncEditorData.GravitationValue);
-		ncBody* body = ncBodies;
-		while (body)
+		//ncBody* body = ncBodies;
+		for (ncBody* body = ncBodies; body; body = body->next)
 		{
-			//ApplyForce(body, CreateVector2(0, -50), FM_FORCE);
+			Step(body, dt);
 			body = body->next;
 		}
 
-		body = ncBodies;
-		while (body)
+		// collision
+		ncContact_t* contacts = NULL;
+		CreateContacts(ncBodies, contacts);
+
+		//body = ncBodies;
+		for (ncBody* body = ncBodies; body; body = body->next)
 		{
 			Step(body, dt);
 			body = body->next;
@@ -72,12 +78,23 @@ int main(void)
 
 		DrawText(TextFormat("FPS: %.2f", fps), 10, 10, 20, LIME);
 		DrawText(TextFormat("DT: %.4f", dt), 10, 30, 20, LIME);
-		body = ncBodies;
-		while (body)	
+		// draw springs
+		/*for (ncBody* body = ncBodies; body; body = body->next)
 		{
 			Vector2 screen = ConvertWorldToScreen(body->position);
 			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(body->mass), RED);
-			body = body->next;
+		}*/
+		// draw bodies
+		for (ncBody* body = ncBodies; body; body = body->next)	
+		{
+			Vector2 screen = ConvertWorldToScreen(body->position);
+			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(body->mass), RED);
+		}
+		// draw contacts
+		for (ncContact_t* contact = contacts; contact; contact = contact->next)
+		{
+			Vector2 screen = ConvertWorldToScreen(contact->body1->position);
+			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(contact->body1->mass), RED);
 		}
 		DrawEditor(position);
 		EndDrawing();
