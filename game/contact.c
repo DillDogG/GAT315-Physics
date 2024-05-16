@@ -11,7 +11,7 @@ void AddContact(ncContact_t* contact, ncContact_t** contacts)
 	assert(contact);
 
 	// add element to linked list
-	contact->next = *contacts;
+	if (*contacts) contact->next = *contacts;
 
 	// set head of elements to new element
 	*contacts = contact;

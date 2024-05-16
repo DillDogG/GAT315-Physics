@@ -21,6 +21,7 @@ int main(void)
 
 	// initialize world
 	ncGravity = (Vector2){ 0, 0 };
+	InitEditor();
 
 	while (!WindowShouldClose())
 	{
@@ -32,7 +33,7 @@ int main(void)
 
 		UpdateEditor(position);
 
-		if (IsMouseButtonDown(0))
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && IsKeyDown(KEY_LEFT_SHIFT)))
 		{
 			float angle = GetRandomFloatValue(0, 360);
 			for (int i = 0; i < 1; i++)
@@ -45,6 +46,7 @@ int main(void)
 				//body->type = ncEditorData.BodyTypeActive;
 				body->damping = ncEditorData.DampingValue;
 				body->gravityScale = ncEditorData.GravityScaleValue;
+				body->restitution = 0.8f;
 				//Vector2 force = Vector2Scale(GetVector2FromAngle(angle), GetVector2FromAngle(angle));
 				//ApplyForce(body, force, FM_IMPULSE);
 				AddBody(body);
@@ -59,19 +61,23 @@ int main(void)
 		for (ncBody* body = ncBodies; body; body = body->next)
 		{
 			Step(body, dt);
-			body = body->next;
+			//body = body->next;
 		}
 
 		// collision
 		ncContact_t* contacts = NULL;
-		CreateContacts(ncBodies, contacts);
+		CreateContacts(ncBodies, &contacts);
+		SeparateContacts(contacts);
+		ResolveContacts(contacts);
 
 		//body = ncBodies;
 		for (ncBody* body = ncBodies; body; body = body->next)
 		{
 			Step(body, dt);
-			body = body->next;
+			//body = body->next;
 		}
+
+		//ncContact_t* contacts = NULL;
 
 		BeginDrawing();
 		ClearBackground(BLACK);
@@ -88,13 +94,13 @@ int main(void)
 		for (ncBody* body = ncBodies; body; body = body->next)	
 		{
 			Vector2 screen = ConvertWorldToScreen(body->position);
-			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(body->mass), RED);
+			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(body->mass * 0.5f), WHITE);
 		}
 		// draw contacts
 		for (ncContact_t* contact = contacts; contact; contact = contact->next)
 		{
 			Vector2 screen = ConvertWorldToScreen(contact->body1->position);
-			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(contact->body1->mass), RED);
+			DrawCircle((int)screen.x, (int)screen.y, ConvertWorldToPixel(contact->body1->mass * 0.5f), RED);
 		}
 		DrawEditor(position);
 		EndDrawing();

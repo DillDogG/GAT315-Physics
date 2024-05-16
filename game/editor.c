@@ -42,15 +42,17 @@ void UpdateEditor(Vector2 position)
 
 void DrawEditor(Vector2 position)
 {
-    //if (ncEditorData.BodyTypeEditMode) GuiLock();
+    if (ncEditorData.BodyTypeEditMode) GuiLock();
 
     if (EditorBoxActive)
     {
         EditorBoxActive = !GuiWindowBox((Rectangle) { anchor01.x + 0, anchor01.y + 0, 304, 616 }, "Editor");
-        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 120, 120, 16 }, "Mass Max", TextFormat("%0.2f"), & ncEditorData.MassValue, 0, 5);
-        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 160, 120, 16 }, "Gravitation", TextFormat("%0.2f"), & ncEditorData.GravitationValue, 0, 100);
-        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 200, 120, 16 }, "Gravity Scale", TextFormat("%0.2f"), & ncEditorData.GravityScaleValue, 0, 10);
-        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 240, 120, 16 }, "Damping", TextFormat("%0.2f"), & ncEditorData.DampingValue, 0, 10);
+        if (GuiDropdownBox((Rectangle) { anchor01.x + 80, anchor01.y + 80, 120, 16 }, "DYNAMIC;KINEMATIC;STATIC", & ncEditorData.BodyTypeActive, ncEditorData.BodyTypeEditMode)) ncEditorData.BodyTypeEditMode = !ncEditorData.BodyTypeEditMode;
+        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 160, 120, 16 }, "Mass Max", TextFormat("%0.2f", ncEditorData.MassValue), & ncEditorData.MassValue, 0, 5);
+        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 200, 120, 16 }, "Gravitation", TextFormat("%0.2f", ncEditorData.GravitationValue), & ncEditorData.GravitationValue, 0, 100);
+        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 240, 120, 16 }, "Gravity Scale", TextFormat("%0.2f", ncEditorData.GravityScaleValue), & ncEditorData.GravityScaleValue, 0, 10);
+        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 280, 120, 16 }, "Damping", TextFormat("%0.2f", ncEditorData.DampingValue), & ncEditorData.DampingValue, 0, 10);
+        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 320, 120, 16 }, "Stiffness", TextFormat("%0.2f", ncEditorData.StiffnessValue), & ncEditorData.StiffnessValue, 0, 10);
     }
 
     DrawTexture(cursorTexture, (int)position.x - cursorTexture.width / 2, (int)position.y - cursorTexture.height / 2, (Color) { 255, 255, 255, 255 });
