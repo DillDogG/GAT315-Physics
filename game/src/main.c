@@ -20,7 +20,7 @@ int main(void)
 	SetTargetFPS(60);
 
 	// initialize world
-	ncGravity = (Vector2){ 0, 0 };
+	ncGravity = (Vector2){ 0, -2 };
 	InitEditor();
 
 	while (!WindowShouldClose())
