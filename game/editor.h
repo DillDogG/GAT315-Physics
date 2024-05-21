@@ -11,7 +11,10 @@ typedef struct ncEditorData
 	float DampingValue;
 	int BodyTypeActive;
 	float StiffnessValue;
+	float RestitutionValue;
 	float GravityValue;
+	bool ResetPressed;
+	bool SimulatePressed;
 } ncEditorData_t;
 
 extern ncEditorData_t ncEditorData;

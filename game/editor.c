@@ -29,10 +29,15 @@ void InitEditor()
     ncEditorData.DampingValue = 0.0f;
     ncEditorData.GravityScaleValue = 1.0f;
     ncEditorData.StiffnessValue = 10.0f;
+    ncEditorData.RestitutionValue = 0.4f;
 
     // world 
     ncEditorData.GravityValue = 0.0f;
     ncEditorData.GravitationValue = 0.0f;
+
+    // buttons
+    ncEditorData.ResetPressed = false;
+    ncEditorData.SimulatePressed = false;
 }
 
 void UpdateEditor(Vector2 position)
@@ -53,6 +58,9 @@ void DrawEditor(Vector2 position)
         GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 240, 120, 16 }, "Gravity Scale", TextFormat("%0.2f", ncEditorData.GravityScaleValue), & ncEditorData.GravityScaleValue, 0, 10);
         GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 280, 120, 16 }, "Damping", TextFormat("%0.2f", ncEditorData.DampingValue), & ncEditorData.DampingValue, 0, 10);
         GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 320, 120, 16 }, "Stiffness", TextFormat("%0.2f", ncEditorData.StiffnessValue), & ncEditorData.StiffnessValue, 0, 10);
+        GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 360, 120, 16 }, "Restitution", TextFormat("%0.2f", ncEditorData.RestitutionValue), & ncEditorData.RestitutionValue, 0, 1);
+        ncEditorData.ResetPressed = GuiButton((Rectangle) { anchor01.x + 40, anchor01.y + 400, 80, 16 }, "Reset");
+        ncEditorData.SimulatePressed = GuiButton((Rectangle) { anchor01.x + 160, anchor01.y + 400, 80, 16 }, "Simulate");
     }
 
     DrawTexture(cursorTexture, (int)position.x - cursorTexture.width / 2, (int)position.y - cursorTexture.height / 2, (Color) { 255, 255, 255, 255 });

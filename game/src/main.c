@@ -18,6 +18,8 @@ int main(void)
 {
 	InitWindow(1260, 680, "raylib [core] example - basic window");
 	SetTargetFPS(60);
+	float fixedTimeStep = 1 / 60.0f;
+	float timeAccumulator = 0;
 
 	// initialize world
 	ncGravity = (Vector2){ 0, -2 };
@@ -46,29 +48,30 @@ int main(void)
 				//body->type = ncEditorData.BodyTypeActive;
 				body->damping = ncEditorData.DampingValue;
 				body->gravityScale = ncEditorData.GravityScaleValue;
-				body->restitution = 0.8f;
+				body->restitution = ncEditorData.RestitutionValue;
 				//Vector2 force = Vector2Scale(GetVector2FromAngle(angle), GetVector2FromAngle(angle));
 				//ApplyForce(body, force, FM_IMPULSE);
 				AddBody(body);
 			}
 		}
-
-
-		// apply force
-
-		ApplyGravitation(ncBodies, ncEditorData.GravitationValue);
-		//ncBody* body = ncBodies;
-		for (ncBody* body = ncBodies; body; body = body->next)
-		{
-			Step(body, dt);
-			//body = body->next;
-		}
-
-		// collision
 		ncContact_t* contacts = NULL;
-		CreateContacts(ncBodies, &contacts);
-		SeparateContacts(contacts);
-		ResolveContacts(contacts);
+		timeAccumulator += dt;
+		while (timeAccumulator >= fixedTimeStep)
+		{
+			timeAccumulator -= fixedTimeStep;
+			ApplyGravitation(ncBodies, ncEditorData.GravitationValue);
+			for (ncBody* body = ncBodies; body; body = body->next)
+			{
+				Step(body, fixedTimeStep);
+				//body = body->next;
+			}
+
+			// collision
+			//contacts = NULL;
+			CreateContacts(ncBodies, &contacts);
+			SeparateContacts(contacts);
+			ResolveContacts(contacts);
+		}
 
 		//body = ncBodies;
 		for (ncBody* body = ncBodies; body; body = body->next)
