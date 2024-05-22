@@ -271,6 +271,7 @@
     <ClCompile Include="editor.c" />
     <ClCompile Include="Force.c" />
     <ClCompile Include="render.c" />
+    <ClCompile Include="Spring.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="World.c" />
   </ItemGroup>
@@ -288,6 +289,7 @@
     <ClInclude Include="Integrator.h" />
     <ClInclude Include="mathf.h" />
     <ClInclude Include="render.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

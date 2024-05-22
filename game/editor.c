@@ -61,6 +61,7 @@ void DrawEditor(Vector2 position)
         GuiSliderBar((Rectangle) { anchor01.x + 80, anchor01.y + 360, 120, 16 }, "Restitution", TextFormat("%0.2f", ncEditorData.RestitutionValue), & ncEditorData.RestitutionValue, 0, 1);
         ncEditorData.ResetPressed = GuiButton((Rectangle) { anchor01.x + 40, anchor01.y + 400, 80, 16 }, "Reset");
         ncEditorData.SimulatePressed = GuiButton((Rectangle) { anchor01.x + 160, anchor01.y + 400, 80, 16 }, "Simulate");
+        //GuiCheckBox((Rectangle) { anchor01.x + 160, anchor01.y + 400, 80, 16 }, "Simulate", ncEditorData.SimulatePressed);
     }
 
     DrawTexture(cursorTexture, (int)position.x - cursorTexture.width / 2, (int)position.y - cursorTexture.height / 2, (Color) { 255, 255, 255, 255 });

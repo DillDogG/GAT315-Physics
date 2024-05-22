@@ -54,31 +54,40 @@ int main(void)
 				AddBody(body);
 			}
 		}
+
+		if (ncEditorData.ResetPressed)
+		{
+			ncBodies = NULL;
+		}
+
 		ncContact_t* contacts = NULL;
 		timeAccumulator += dt;
-		while (timeAccumulator >= fixedTimeStep)
+		if (!ncEditorData.SimulatePressed)
 		{
-			timeAccumulator -= fixedTimeStep;
-			ApplyGravitation(ncBodies, ncEditorData.GravitationValue);
-			for (ncBody* body = ncBodies; body; body = body->next)
+			while (timeAccumulator >= fixedTimeStep)
 			{
-				Step(body, fixedTimeStep);
-				//body = body->next;
+				timeAccumulator -= fixedTimeStep;
+				ApplyGravitation(ncBodies, ncEditorData.GravitationValue);
+				for (ncBody* body = ncBodies; body; body = body->next)
+				{
+					Step(body, fixedTimeStep);
+					//body = body->next;
+				}
+
+				// collision
+				//contacts = NULL;
+				CreateContacts(ncBodies, &contacts);
+				SeparateContacts(contacts);
+				ResolveContacts(contacts);
 			}
-
-			// collision
-			//contacts = NULL;
-			CreateContacts(ncBodies, &contacts);
-			SeparateContacts(contacts);
-			ResolveContacts(contacts);
 		}
 
-		//body = ncBodies;
-		for (ncBody* body = ncBodies; body; body = body->next)
-		{
-			Step(body, dt);
-			//body = body->next;
-		}
+		////body = ncBodies;
+		//for (ncBody* body = ncBodies; body; body = body->next)
+		//{
+		//	Step(body, dt);
+		//	//body = body->next;
+		//}
 
 		//ncContact_t* contacts = NULL;
 
